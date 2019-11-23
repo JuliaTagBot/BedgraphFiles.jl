@@ -58,6 +58,17 @@ function Base.convert(::Type{GenomicFeatures.GenomicInterval{T}}, record::Bedgra
     )
 end
 
+function Base.convert(::Type{GenomicFeatures.GenomicInterval{T}}, record::NamedTuple{(:chrom, :first, :last, :value),Tuple{String,Int64,Int64,V}}) :: GenomicFeatures.GenomicInterval{T} where {V, T<:Real}
+
+    return GenomicFeatures.GenomicInterval(
+        record.chrom,
+        record.first,
+        record.last,
+        '?',
+        convert(T, record.value)
+    )
+end
+
 function Base.convert(::Type{Vector{GenomicFeatures.GenomicInterval{T}}}, records::Vector{Bedgraph.Record}) :: Vector{GenomicFeatures.GenomicInterval{T}} where {T<:Union{Nothing, Real}}
 
     vec = Vector{GenomicFeatures.GenomicInterval{T}}(undef, length(records))
@@ -69,6 +80,7 @@ function Base.convert(::Type{Vector{GenomicFeatures.GenomicInterval{T}}}, record
 
     return vec
 end
+
 
 function Base.convert(::Type{GenomicFeatures.GenomicIntervalCollection{T}}, records::AbstractVector{Bedgraph.Record}) ::GenomicFeatures.GenomicIntervalCollection{GenomicFeatures.GenomicInterval{T}} where {T<:Union{Nothing, Real}}
 

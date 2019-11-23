@@ -59,4 +59,13 @@
     @test col2 == GenomicIntervalCollection{Nothing}(load(Bag.tmp_output_path))
     @test col2 == load(Bag.tmp_output_path) |> GenomicIntervalCollection{Nothing}
 
+
+    #
+    @test load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> GenomicIntervalCollection{Float64} == GenomicIntervalCollection([GenomicInterval("chr19", 49303200, 49303500, 0.0)])
+
+    #
+    @test load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> GenomicIntervalCollection{Nothing} == GenomicIntervalCollection([GenomicInterval("chr19", 49303200, 49303500)])
+
+    @test load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> GenomicIntervalCollection == GenomicIntervalCollection([GenomicInterval("chr19", 49303200, 49303500, 0.0)])
+
 end #testset GenomicFeatures
